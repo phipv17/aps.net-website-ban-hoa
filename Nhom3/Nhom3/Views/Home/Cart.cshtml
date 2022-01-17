@@ -1,0 +1,130 @@
+﻿@model List<Nhom3.Core.ViewModels.ProductInCart>
+@using System.Globalization;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>Giỏ hàng</title>
+</head>
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        @if (ViewBag.Message != null)
+        {
+
+            <div class="row col-md-12" style="margin-left:3px;">
+                <span class="alert alert-warning col-md-12">@ViewBag.Message</span>
+            </div>
+        }
+        else
+        {
+
+            <div class="table-responsive cart_info">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr class="cart_menu">
+                            <td>Sản phẩm</td>
+                            <td>Ảnh</td>
+                            <td>Giá</td>
+                            <td>Giá KM</td>
+                            <td>Số lượng</td>
+                            <td>Tổng</td>
+                            <td>Xóa</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>
+                                    <img src="~/wwwroot/Content/images/@item.Image" width="200" height="200" />
+                                </td>
+                                <td>@item.Price.ToString("C0", CultureInfo.CurrentCulture).Substring(1)</td>
+                                <td>@item.SalePrice.ToString("C0", CultureInfo.CurrentCulture).Substring(1)</td>
+                                <td>
+                                    <a href="@Url.Action("Minius","Home",new {cartCode=item.CartCode,productCode=item.Code})"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                                    @item.Quantity
+                                    <a href="@Url.Action("Plus","Home",new {cartCode=item.CartCode,productCode=item.Code})"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+                                </td>
+
+                                @{ string sum = "";
+                                    if (item.SalePrice == null)
+                                    {
+                                        sum = (item.Price * item.Quantity).ToString("C0", CultureInfo.CurrentCulture).Substring(1) + " VND";
+                                    }
+                                    sum = (item.SalePrice * item.Quantity).ToString("C0", CultureInfo.CurrentCulture).Substring(1) + " VND";
+
+                                    <td>@sum</td>
+                                }
+                                <td>
+                                    <a href="@Url.Action("RemoveFromCart","Home",new {cartCode=item.CartCode,productCode=item.Code})"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section> <!--/#cart_items-->
+@{
+    decimal totalOfProduct = 0;
+    foreach (var item in Model)
+    {
+        if (item.SalePrice != null)
+        {
+            totalOfProduct += item.SalePrice * item.Quantity;
+        }
+        else
+        {
+            totalOfProduct += item.Price * item.Quantity;
+        }
+    }
+
+    string totalOfproductStr = totalOfProduct.ToString("C0", CultureInfo.CurrentCulture).Substring(1) + " VND";
+    decimal ship = 0;
+    if (Model.Count > 2)
+    {
+        ship = 0;
+    }
+    if (Model.Count == 1)
+    {
+        ship = 15000;
+    }
+
+    var shipStr = ship.ToString("C0", CultureInfo.CurrentCulture).Substring(1) + " VND";
+
+    var totalStr = (totalOfProduct + ship).ToString("C0", CultureInfo.CurrentCulture).Substring(1) + " VND";
+}
+
+@{
+    int cartCode = 0;
+    if (Model.ToList().Count != 0)
+    {
+        cartCode = Model.FirstOrDefault().CartCode;
+    }
+
+}
+<section id="do_action">
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="total_area">
+                <ul>
+                    <li>Tiền hoa<span>@totalOfproductStr</span></li>
+                    <li>Phí vận chuyển<span>@shipStr</span></li>
+                    <li>Tổng tiền<span>@totalStr</span></li>
+                </ul>
+                <a class="btn btn-default update" href="@Url.Action("Index","Home")">Mua thêm</a>
+                <a class="btn btn-default check_out" href="@Url.Action("Checkout","Home",new { cartCode=cartCode})">Thanh toán</a>
+            </div>
+        </div>
+    </div>
+</section><!--/#do_action-->

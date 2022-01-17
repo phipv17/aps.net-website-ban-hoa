@@ -1,0 +1,59 @@
+﻿@model Nhom3.Core.Domains.HoaDon
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <title>Thanh Toán</title>
+</head>
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                <li class="active">Check out</li>
+            </ol>
+        </div><!--/breadcrums-->
+
+
+        @if (ViewBag.Succcess != null)
+        {
+            <span class="alert alert-success" style="margin-bottom:20px;">@ViewBag.Succcess</span>
+        }
+        <div class="shopper-informations">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="bill-to">
+
+                        <p>Địa chỉ nhận hàng</p>
+                        <div class="">
+                            @using (Html.BeginForm("Checkout", "Home", FormMethod.Post))
+                            {
+                                <input value="@ViewBag.cartCode" name="MaGioHang" hidden />
+                                <input type="text" placeholder="Địa chỉ nhận hàng" name="DcNhanHang" class="form-control">
+                                @Html.ValidationMessageFor(model => model.DcNhanHang, "", new { @class = "text-danger" })
+                                <div class="order-message">
+                                    <p>Lời nhắn</p>
+                                    <textarea name="GhiChu" placeholder="Ghi chú về đơn đặt hàng của bạn, Ghi chú đặc biệt khi giao hàng" rows="16"></textarea>
+
+                                </div>
+
+
+                                <input type="submit" value="Xác nhận" class="btn btn-warning" />
+
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section> <!--/#cart_items-->

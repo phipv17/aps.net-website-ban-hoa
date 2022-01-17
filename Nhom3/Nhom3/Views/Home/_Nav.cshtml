@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Nhom3.Core.Domains.DanhMuc>
+
+<div class="header-middle">
+    <!--header-middle-->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 clearfix">
+                <div class="logo pull-left">
+                    <a href="@Url.Action("Index","Home")"><img src="https://thegioihoa.net/giaodien/default/images/logo.png" alt="" /></a>
+                </div>
+            </div>
+            <div class="col-md-10 clearfix">
+                <div class="shop-menu clearfix pull-right">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="@Url.Action("Checkout","Home")"><i class="fa fa-crosshairs"></i> Thanh toán</a></li>
+                        <li><a href="@Url.Action("Cart","Home")"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+                        @if (Session["TenTaiKhoan"] == null)
+                        {
+                            <li><a href="@Url.Action("Login","Home")"><i class="fa fa-lock"></i> Đăng nhập</a></li>
+                        }
+                        else
+                        {
+                            @*<li><a href="@Url.Action("User","Home", new {TenTK = Session["TenTaiKhoan"] })"><i class="fa fa-lock"></i> Thông tin tài khoản</a></li>*@
+                            <li><a href="@Url.Action("EditUser","Home", new {TenTK = Session["TenTaiKhoan"] })"><i class="fa fa-lock"></i> Sửa thông tin tài khoản</a></li>
+                            <li><a href="@Url.Action("ChangePassword","Home", new {TenTK = Session["TenTaiKhoan"] })"><i class="fa fa-lock"></i> Đổi mật khẩu</a></li>
+                            <li><a href="@Url.Action("Logout","Home")"><i class="fa fa-lock"></i> Đăng xuất</a></li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!--/header-middle-->
+
+<div class="header-bottom">
+    <!--header-bottom-->
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-8">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="mainmenu pull-left">
+                    <ul class="nav navbar-nav collapse navbar-collapse">
+                        <li><a href="@Url.Action("Index", "Home")" class="active" style="font-size:25px;">Trang chủ</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="navbar-link dropdown" data-toggle="dropdown" style="">Danh mục sản phẩm</a>
+                            <div class="dropdown-menu" style="width:200px;color:black;" >
+                                @foreach (var item in Model)
+                                {
+                                    
+                                        <a href="@Url.Action("Index","Home", new { madm = item.MaDM })" class="dropdown-toggle" style="padding:30px; margin-bottom:10px;" >@Html.DisplayFor(modelItem => item.TenDM)</a><br /><br />
+                                    
+                                }
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+         
+        </div>
+    </div>
+</div><!--/header-bottom-->
